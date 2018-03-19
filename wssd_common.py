@@ -72,12 +72,12 @@ class DenseTrackSet(object):
         def addArray( self, dtype, lncols ):            
             for contigName in self.dst.mContigNameLen:
                 debug_output('setting up contig %s'%contigName)
-#                self.dst.tbl.createArray(
+#                self.dst.tbl.create_array(
 #                                 self.dst.tbl.get_node('/%s'%self.h5grpname), 
 #                                 contigName,
 #                                 np.zeros( tuple( [self.dst.mContigNameLen[contigName]] + lncols ), 'uint16' )) 
                 
-                ar=self.dst.tbl.createCArray(
+                ar=self.dst.tbl.create_carray(
                                  self.dst.tbl.get_node('/%s'%self.h5grpname), 
                                  contigName,
                                  dtype, 
@@ -102,7 +102,7 @@ class DenseTrackSet(object):
             
     def addGroup( self, grpName ):
         assert not grpName in self, grpName
-        self.tbl.createGroup( self.tbl.root, grpName )
+        self.tbl.create_group( self.tbl.root, grpName )
         return self[grpName]
         
     def __contains__(self, grpName):
