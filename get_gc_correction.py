@@ -7,6 +7,9 @@ import kg_file_handling as kgf
 #from scipy import *
 from optparse import OptionParser
 
+sys.path.append('/net/eichler/vol27/projects/morbidity_map/nobackups/02.ILLUMINA/06.dCGH/test_miniconda/mrssnake_mapped/rd_pipelines/wssd_sunk')
+sys.path.append('/net/eichler/vol27/projects/morbidity_map/nobackups/02.ILLUMINA/06.dCGH/test_miniconda/mrssnake_mapped/rd_pipelines/ssf_DTS_caller')
+
 from wssd_common import *
 from wssd_pw_common import *
 
@@ -15,7 +18,7 @@ from calc_gc_depth import calc_gc_depth
 import Bio.Statistics.lowess as biostats
 
 def die(str):
-    print str
+    print(str)
     assert(0)
 
 class GC_correction:
@@ -37,7 +40,7 @@ class GC_correction:
     def add_wssd_chunk(self,depth_chunk,mask_chunk,superDup_chunk,DGV_chunk,GC_count_chunk,genomic_gaps_chunk):
 
         cp2_unmasked_bool = np.cast[np.uint8](((mask_chunk) | (superDup_chunk) | (DGV_chunk) | genomic_gaps_chunk) ) #make sure NOT masked, not DGV or GC_count
-        print "this many bases have a GC_count of 0...", ((GC_count_chunk==0)[cp2_unmasked_bool]).sum()
+        print("this many bases have a GC_count of 0...", ((GC_count_chunk==0)[cp2_unmasked_bool]).sum())
         sum,sum_depth_at_gc,count_at_gc = calc_gc_depth(depth_chunk,GC_count_chunk,cp2_unmasked_bool,self.width_range)
 
         #print sum_depth_at_gc
@@ -84,7 +87,7 @@ def calc_gc_correction(fn_wssd_file,lib_bac_analysis_dir,GC_width,lib_wssd,mask_
 
         while(start < contig_len):
             end = min(start+chunk_iter,contig_len)
-            print "loading and analyzing: %s %d %d"%(curr_contig,start,end)
+            print("loading and analyzing: %s %d %d"%(curr_contig,start,end))
             mask_chunk = mask_track["mask"][curr_contig][start:end,:].sum(1)>0
             depth_chunk = np.cast['uint64'](lib_wssd.depth["wssd"][curr_contig][start:end,dim,:].sum(1))
             superDup_flat_chunk = superDup_flat_track["annotation"][curr_contig][start:end]
@@ -135,9 +138,9 @@ if __name__=='__main__':
     (o, args) = opts.parse_args()
 
     input_genome_lines = open(o.fn_input_genomes,'r').readlines()
-    print "getting genome_info..."
+    print("getting genome_info...")
     genome_info = kgf.genome_info(o.fn_input_genomes,o.fn_sex_pop_index)
-    print "done"
+    print("done")
 
     mask_track = DenseTrackSet(o.fn_hg_contigs,
                                             fnWssd=o.fn_hg_mask,
@@ -175,12 +178,12 @@ if __name__=='__main__':
         genome_id = genome.split(".")[0]
 
         dirbac_fnwssd_pairs = get_lib_bac_wssd_pairs(genome_id,fn_wssd_dir,fn_bac_dir,o.wssd_file)
-        print genome
-        print "*",dirbac_fnwssd_pairs
+        print(genome)
+        print("*",dirbac_fnwssd_pairs)
 
-        for lib,bacdir_fnwssd_pair in dirbac_fnwssd_pairs.iteritems():
+        for lib,bacdir_fnwssd_pair in dirbac_fnwssd_pairs.items():
 
-            print "\t",lib, bacdir_fnwssd_pair
+            print("\t",lib, bacdir_fnwssd_pair)
 
             lib_wssd = WssdFile(o.fn_hg_contigs,
                                                     fnWssd=bacdir_fnwssd_pair[1],

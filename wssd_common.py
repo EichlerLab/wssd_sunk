@@ -22,7 +22,7 @@ except Error(e):
     sys.stderr.write( 'Error occurred getting hostname' )
     
 def debug_output( msg, indent=6 ):
-    print '%s{WSSD %s} [%s] %s'%( ''.join(' '*indent), _cur_hostname, time.ctime(), msg )
+    print('%s{WSSD %s} [%s] %s'%( ''.join(' '*indent), _cur_hostname, time.ctime(), msg ))
 
 class DenseTrackSet(object):
     
@@ -44,10 +44,11 @@ class DenseTrackSet(object):
         debug_output('WssdBase: reading contig lengths from file %s'%fnContigLengths)        
         
         self.mContigNameLen = {}
-        for l in open(fnContigLengths,'r'):
-            l=l.replace('\n','').split('\t')
-            self.mContigNameLen[l[0]]=int(l[1])
-        
+        with open(fnContigLengths,'r') as f:
+            for l in f:
+                l=l.replace('\n','').split('\t')
+                self.mContigNameLen[l[0]]=int(l[1])
+
         debug_output('WSSD space: %d contigs totaling %d bp'%( len(self.mContigNameLen), sum(self.mContigNameLen.values()) ))
         
         if overwrite or not os.path.exists(fnWssd): 
@@ -292,13 +293,13 @@ class WssdFile(DenseTrackSet):
         lFiles = areCompressed and [gzip.open(fn,'r') for fn in lFns ] or [open(fn,'r') for fn in lFns]
         lNextLine = [ f.readline().replace('\n','').rstrip() for f in lFiles ]
         lFilesDone = [ len(l)==0 for l in lNextLine ]
-        lChromNextLine = [ (not lFilesDone[i]) and sam_get_chrom(lNextLine[i].split('\t')) or None for i in xrange(len(lFiles)) ]
+        lChromNextLine = [ (not lFilesDone[i]) and sam_get_chrom(lNextLine[i].split('\t')) or None for i in range(len(lFiles)) ]
                 
         while not all(lFilesDone): 
             # find the next chromosome to process
             chromToProcess = min([c for c in lChromNextLine if c!=None])
             debug_output('%d files not done, %s is next chromosome to process'%( len([k for k in lFilesDone if k]), chromToProcess ))
-            liFilesToProcess = [ i for i in xrange(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
+            liFilesToProcess = [ i for i in range(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
             # if we encounter a chrom/contig name that we don't know about then skip it in all files.
             while not all(lFilesDone) and not chromToProcess in self.depth[tracksetBaseName]: 
                 assert ignoreHitsToUnknownContigs, chromToProcess
@@ -316,7 +317,7 @@ class WssdFile(DenseTrackSet):
                     
                 if len([c for c in lChromNextLine if c!=None])>0:
                     chromToProcess = min([c for c in lChromNextLine if c!=None])
-                    liFilesToProcess = [ i for i in xrange(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
+                    liFilesToProcess = [ i for i in range(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
                     debug_output('%d files not done, %s is next chromosome to process'%( len([k for k in lFilesDone if k]), chromToProcess ))
                 else:
                     liFilesToProcess = []
@@ -368,7 +369,7 @@ class WssdFile(DenseTrackSet):
                 lNextLine[ifile]=l
                 lChromNextLine[ifile]=curChrom
                 lFilesDone[ifile]=(curChrom==None)
-                print lFilesDone
+                print(lFilesDone)
                 
             if inextRec > 0:
                 # TODO put these back but for some reason ipython debug does not like them
@@ -405,7 +406,7 @@ class WssdFile(DenseTrackSet):
                     # if there are any reads _starting_ within this window:
                     # [nextChunkStart,nextChunkEnd+1-maxLen]
                     if (ics_r - 1) - (ics_l) + 1  > 0 :
-                        for ics in xrange(ics_l, ics_r):
+                        for ics in range(ics_l, ics_r):
                             curCozStart = lCurStarts[ ics ]
                             curEditDist = lCurEdDist[ ics ]
                             
@@ -425,7 +426,7 @@ class WssdFile(DenseTrackSet):
                         ics_l = lCurStarts.searchsorted( max(0,nextChunkStart - maxLen + 1), side='left' )
                         ics_r = lCurStarts.searchsorted( nextChunkStart - 1, side='right' )
                         if (ics_r - 1) - (ics_l) + 1  > 0 :
-                            for ics in xrange(ics_l, ics_r):
+                            for ics in range(ics_l, ics_r):
                                 curCozStart = lCurStarts[ ics ]
                                 curEditDist = lCurEdDist[ ics ]
                                 
@@ -442,7 +443,7 @@ class WssdFile(DenseTrackSet):
                     ics_l = lCurStarts.searchsorted( max(nextChunkStart,nextChunkEnd + 2 - maxLen), side='left' )
                     ics_r = lCurStarts.searchsorted( nextChunkEnd, side='right' )
                     if (ics_r - 1) - (ics_l) + 1 > 0:
-                        for ics in xrange(ics_l, ics_r):
+                        for ics in range(ics_l, ics_r):
                             curCozStart = lCurStarts[ ics ]
                             curEditDist = lCurEdDist[ ics ]
                                                         
@@ -499,13 +500,13 @@ class WssdFile(DenseTrackSet):
         lFiles = areCompressed and [gzip.open(fn,'r') for fn in lFns ] or [open(fn,'r') for fn in lFns]
         lNextLine = [ f.readline().replace('\n','').rstrip() for f in lFiles ]
         lFilesDone = [ len(l)==0 for l in lNextLine ]
-        lChromNextLine = [ (not lFilesDone[i]) and sam_get_chrom(lNextLine[i].split('\t')) or None for i in xrange(len(lFiles)) ]
+        lChromNextLine = [ (not lFilesDone[i]) and sam_get_chrom(lNextLine[i].split('\t')) or None for i in range(len(lFiles)) ]
                 
         while not all(lFilesDone): 
             # find the next chromosome to process
             chromToProcess = min([c for c in lChromNextLine if c!=None])
             debug_output('%d files not done, %s is next chromosome to process'%( len([k for k in lFilesDone if k]), chromToProcess ))
-            liFilesToProcess = [ i for i in xrange(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
+            liFilesToProcess = [ i for i in range(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
             # if we encounter a chrom/contig name that we don't know about then skip it in all files.
             while not all(lFilesDone) and not chromToProcess in self.depth[tracksetBaseName]: 
                 assert ignoreHitsToUnknownContigs, chromToProcess
@@ -523,7 +524,7 @@ class WssdFile(DenseTrackSet):
 
                 if len([c for c in lChromNextLine if c!=None])>0:
                     chromToProcess = min([c for c in lChromNextLine if c!=None])
-                    liFilesToProcess = [ i for i in xrange(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
+                    liFilesToProcess = [ i for i in range(len(lFiles)) if lChromNextLine[i]==chromToProcess ]
                     debug_output('%d files not done, %s is next chromosome to process'%( len([k for k in lFilesDone if k]), chromToProcess ))
                 else:
                     liFilesToProcess = []
@@ -787,7 +788,7 @@ def perbaseToWindowAverageMaskedVariableBoundaries(
     
     ofsrngWnd = np.c_[ corngWnd[:,0] - 1 - (cooStart - 1), corngWnd[:,1] - (cooStart - 1) ]
     
-    for iwnd in xrange(corngWnd.shape[0]):
+    for iwnd in range(corngWnd.shape[0]):
         nBpUnmasked[iwnd] = (ofsrngWnd[iwnd,1]-ofsrngWnd[iwnd,0]+1) - arMasked[ ofsrngWnd[iwnd,0]:ofsrngWnd[iwnd,1]+1 ].sum()
         Vwndavg[iwnd] = ( V[ ofsrngWnd[iwnd,0]:ofsrngWnd[iwnd,1]+1 ] * (~arMasked[ofsrngWnd[iwnd,0]:ofsrngWnd[iwnd,1]+1]).astype('f') ).sum()
 
