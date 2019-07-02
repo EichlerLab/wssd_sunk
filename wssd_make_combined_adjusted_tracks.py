@@ -8,7 +8,6 @@ import time
 
 import numpy as np
 import tables
-import pygr.Data
 
 from wssd_common import *
 from wssd_pw_common import *
