@@ -121,12 +121,12 @@ class DenseTrackSet(object):
         debug_output('WSSD space: %d contigs totaling %d bp'%( len(self.mContigNameLen), sum(self.mContigNameLen.values()) ))
         
         if overwrite or not os.path.exists(fnWssd): 
-            self.tbl = tables.openFile( fnWssd, 'w' )
+            self.tbl = tables.open_file( fnWssd, 'w' )
         else:
             if openMode=='r':
-                self.tbl = tables.openFile( fnWssd, 'r' )
+                self.tbl = tables.open_file( fnWssd, 'r' )
             else:
-                self.tbl = tables.openFile( fnWssd, 'a' )
+                self.tbl = tables.open_file( fnWssd, 'a' )
     
     class DenseTrackSetGroup(object):
         def __init__(self, dst, h5grpname):
