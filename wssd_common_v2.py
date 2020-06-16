@@ -134,21 +134,21 @@ class DenseTrackSet(object):
             self.h5grpname = h5grpname
             
         def __getitem__( self, contigName ):
-            return self.dst.tbl.getNode( self.dst.tbl.getNode('/%s'%self.h5grpname) , contigName )
+            return self.dst.tbl.get_node( self.dst.tbl.get_node('/%s'%self.h5grpname) , contigName )
         
         def __contains__(self, contigName):
-            return contigName in self.dst.tbl.getNode('/%s'%self.h5grpname)
+            return contigName in self.dst.tbl.get_node('/%s'%self.h5grpname)
         
         def addArray( self, dtype, lncols ):            
             for contigName in self.dst.mContigNameLen:
                 debug_output('setting up contig %s'%contigName)
 #                self.dst.tbl.createArray(
-#                                 self.dst.tbl.getNode('/%s'%self.h5grpname), 
+#                                 self.dst.tbl.get_node('/%s'%self.h5grpname), 
 #                                 contigName,
 #                                 np.zeros( tuple( [self.dst.mContigNameLen[contigName]] + lncols ), 'uint16' )) 
                 
                 ar=self.dst.tbl.createCArray(
-                                 self.dst.tbl.getNode('/%s'%self.h5grpname), 
+                                 self.dst.tbl.get_node('/%s'%self.h5grpname), 
                                  contigName,
                                  dtype, 
                                  tuple( [self.dst.mContigNameLen[contigName]] + lncols ), 
