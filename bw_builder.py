@@ -21,7 +21,6 @@ class output:
     
     def add(self, contig, start, end, cp):
         self.outdata.append([contig, start, end, cp])
-        
     def output(self, fn_out, indiv, name):            
         color_hash =  { 0 :"229,229,229",
                         1 :"196,196,196",
@@ -63,7 +62,7 @@ if __name__=="__main__":
     opts.add_option('','--fn_out',dest='fn_out')
     opts.add_option('','--contig_prefix',dest='contig_prefix', default="")
     opts.add_option('','--DTS_prefix',dest='DTS_prefix', default="500_bp_")
-    opts.add_option('','--output_contigs',dest='output_contigs', default="/net/eichler/vol7/home/psudmant/genomes/contigs/hg19_contigs.txt")
+    opts.add_option('','--output_contigs',dest='output_contigs')
 
     
     (o, args) = opts.parse_args()
